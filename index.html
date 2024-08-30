@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Activités</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e0e0e0;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        input[type="checkbox"], input[type="number"] {
+            margin-right: 10px;
+        }
+
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #timeo-total, #elise-total {
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCXvefXXse8iClNCSLM8di_F0kR93z7NKU",
+    authDomain: "tableau-cd22b.firebaseapp.com",
+    projectId: "tableau-cd22b",
+    storageBucket: "tableau-cd22b.appspot.com",
+    messagingSenderId: "433922861582",
+    appId: "1:433922861582:web:195d70da95730ef770aa5f",
+    measurementId: "G-V5X4CW1RS5"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+    <h1>Tableau de Suivi</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>Timéo</th>
+                <th>Elise</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Sport</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 1<br>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 2<br>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 3
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> Séance 1<br>
+                    <input type="checkbox" class="elise-checkbox"> Séance 2<br>
+                    <input type="checkbox" class="elise-checkbox"> Séance 3
+                </td>
+            </tr>
+            <tr>
+                <td>Révision</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="timeo-checkbox"> 2 heures<br>
+                    <input type="checkbox" class="timeo-checkbox"> 3 heures
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="elise-checkbox"> 2 heures<br>
+                    <input type="checkbox" class="elise-checkbox"> 3 heures
+                </td>
+            </tr>
+            <tr>
+                <td>Lecture</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="timeo-checkbox"> 2 heures
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="elise-checkbox"> 2 heures
+                </td>
+            </tr>
+            <tr>
+                <td>Temps d'écran</td>
+                <td>
+                    Lundi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Mardi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Mercredi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Jeudi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Vendredi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Samedi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Dimanche: <input type="number" class="timeo-screen" min="0" max="24">h
+                </td>
+                <td>
+                    Lundi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Mardi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Mercredi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Jeudi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Vendredi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Samedi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Dimanche: <input type="number" class="elise-screen" min="0" max="24">h
+                </td>
+            </tr>
+            <tr>
+                <td>Rangement</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> Chambre rangée à la fin de la semaine
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> Chambre rangée à la fin de la semaine
+                </td>
+            </tr>
+            <tr>
+                <td>Total des Points</td>
+                <td id="timeo-total">0</td>
+                <td id="elise-total">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const timeoCheckboxes = document.querySelectorAll(".timeo-checkbox");
+            const eliseCheckboxes = document.querySelectorAll(".elise-checkbox");
+            const timeoScreenInputs = document.querySelectorAll(".timeo-screen");
+            const eliseScreenInputs = document.querySelectorAll(".elise-screen");
+            const timeoTotal = document.getElementById("timeo-total");
+            const eliseTotal = document.getElementById("elise-total");
+
+            // Charger les données depuis le localStorage
+            function loadFromLocalStorage() {
+                timeoCheckboxes.forEach((checkbox, index) => {
+                    checkbox.checked = JSON.parse(localStorage.getItem(`timeo-checkbox-${index}`)) || false;
+                });
+                eliseCheckboxes.forEach((checkbox, index) => {
+                    checkbox.checked = JSON.parse(localStorage.getItem(`elise-checkbox-${index}`)) || false;
+                });
+                timeoScreenInputs.forEach((input, index) => {
+                    input.value = localStorage.getItem(`timeo-screen-${index}`) || "";
+                });
+                eliseScreenInputs.forEach((input, index) => {
+                    input.value = localStorage.getItem(`elise-screen-${index}`) || "";
+                });
+            }
+
+            // Sauvegarder les données dans le localStorage
+            function saveToLocalStorage() {
+                timeoCheckboxes.forEach((checkbox, index) => {
+                    localStorage.setItem(`timeo-checkbox-${index}`, checkbox.checked);
+                });
+                eliseCheckboxes.forEach((checkbox, index) => {
+                    localStorage.setItem(`elise-checkbox-${index}`, checkbox.checked);
+                });
+                timeoScreenInputs.forEach((input, index) => {
+                    localStorage.setItem(`timeo-screen-${index}`, input.value);
+                });
+                eliseScreenInputs.forEach((input, index) => {
+                    localStorage.setItem(`elise-screen-${index}`, input.value);
+                });
+            }
+
+            function updatePoints() {
+                let timeoPoints = 0;
+                let elisePoints = 0;
+
+                // Points for Timéo checkboxes
+                timeoCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        timeoPoints += 1;
+                    }
+                });
+
+                // Points for Elise checkboxes
+                eliseCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        elisePoints += 1;
+                    }
+                });
+
+                // Points for Timéo screen time
+                timeoScreenInputs.forEach(input => {
+                    const hours = parseInt(input.value, 10) || 0;
+                    if (hours === 1) {
+                        timeoPoints += 2;
+                    } else if (hours === 2) {
+                        timeoPoints += 1;
+                    } else if (hours > 3) {
+                        timeoPoints -= (hours - 3);
+                    }
+                });
+
+                // Points for Elise screen time
+                eliseScreenInputs.forEach(input => {
+                    const hours = parseInt(input.value, 10) || 0;
+                    if (hours === 1) {
+                        elisePoints += 2;
+                    } else if (hours === 2) {
+                        elisePoints += 1;
+                    } else if (hours > 3) {
+                        elisePoints -= (hours - 3);
+                    }
+                });
+
+                timeoTotal.textContent = timeoPoints;
+                eliseTotal.textContent = elisePoints;
+                saveToLocalStorage(); // Sauvegarder les points après mise à jour
+            }
+
+            // Initialisation
+            loadFromLocalStorage();
+            updatePoints();
+
+            timeoCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updatePoints);
+            });
+
+            eliseCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updatePoints);
+            });
+
+            timeoScreenInputs.forEach(input => {
+                input.addEventListener("input", updatePoints);
+            });
+
+            eliseScreenInputs.forEach(input => {
+                input.addEventListener("input", updatePoints);
+            });
+        });
+    </script>
+</body>
+</html>
