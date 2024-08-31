@@ -58,12 +58,9 @@
             text-align: center;
         }
     </style>
-    
-    <!-- Script Firebase fourni par Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js"></script>
 </head>
 <body>
+
     <h1>Tableau de Suivi</h1>
 
     <table>
@@ -151,21 +148,6 @@
     </table>
 
     <script>
-        // Configuration Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCXvefXXse8iClNCSLM8di_F0kR93z7NKU",
-            authDomain: "tableau-cd22b.firebaseapp.com",
-            projectId: "tableau-cd22b",
-            storageBucket: "tableau-cd22b.appspot.com",
-            messagingSenderId: "433922861582",
-            appId: "1:433922861582:web:195d70da95730ef770aa5f",
-            measurementId: "G-V5X4CW1RS5"
-        };
-
-        // Initialiser Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         document.addEventListener("DOMContentLoaded", function() {
             const timeoCheckboxes = document.querySelectorAll(".timeo-checkbox");
             const eliseCheckboxes = document.querySelectorAll(".elise-checkbox");
@@ -174,25 +156,57 @@
             const timeoTotal = document.getElementById("timeo-total");
             const eliseTotal = document.getElementById("elise-total");
 
+            // Charger les données depuis le localStorage
+            function loadFromLocalStorage() {
+                timeoCheckboxes.forEach((checkbox, index) => {
+                    checkbox.checked = JSON.parse(localStorage.getItem(`timeo-checkbox-${index}`)) || false;
+                });
+                eliseCheckboxes.forEach((checkbox, index) => {
+                    checkbox.checked = JSON.parse(localStorage.getItem(`elise-checkbox-${index}`)) || false;
+                });
+                timeoScreenInputs.forEach((input, index) => {
+                    input.value = localStorage.getItem(`timeo-screen-${index}`) || "";
+                });
+                eliseScreenInputs.forEach((input, index) => {
+                    input.value = localStorage.getItem(`elise-screen-${index}`) || "";
+                });
+            }
+
+            // Sauvegarder les données dans le localStorage
+            function saveToLocalStorage() {
+                timeoCheckboxes.forEach((checkbox, index) => {
+                    localStorage.setItem(`timeo-checkbox-${index}`, checkbox.checked);
+                });
+                eliseCheckboxes.forEach((checkbox, index) => {
+                    localStorage.setItem(`elise-checkbox-${index}`, checkbox.checked);
+                });
+                timeoScreenInputs.forEach((input, index) => {
+                    localStorage.setItem(`timeo-screen-${index}`, input.value);
+                });
+                eliseScreenInputs.forEach((input, index) => {
+                    localStorage.setItem(`elise-screen-${index}`, input.value);
+                });
+            }
+
             function updatePoints() {
                 let timeoPoints = 0;
                 let elisePoints = 0;
 
-                // Points pour les cases à cocher de Timéo
+                // Points for Timéo checkboxes
                 timeoCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         timeoPoints += 1;
                     }
                 });
 
-                // Points pour les cases à cocher d'Elise
+                // Points for Elise checkboxes
                 eliseCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         elisePoints += 1;
                     }
                 });
 
-                // Points pour le temps d'écran de Timéo
+                // Points for Timéo screen time
                 timeoScreenInputs.forEach(input => {
                     const hours = parseInt(input.value, 10) || 0;
                     if (hours === 1) {
@@ -204,7 +218,7 @@
                     }
                 });
 
-                // Points pour le temps d'écran d'Elise
+                // Points for Elise screen time
                 eliseScreenInputs.forEach(input => {
                     const hours = parseInt(input.value, 10) || 0;
                     if (hours === 1) {
@@ -218,51 +232,13 @@
 
                 timeoTotal.textContent = timeoPoints;
                 eliseTotal.textContent = elisePoints;
-
-                // Sauvegarder les données dans Firebase
-                database.ref('activities/timeo').set({
-                    checkboxes: Array.from(timeoCheckboxes).map(cb => cb.checked),
-                    screenTimes: Array.from(timeoScreenInputs).map(input => input.value)
-                });
-
-                database.ref('activities/elise').set({
-                    checkboxes: Array.from(eliseCheckboxes).map(cb => cb.checked),
-                    screenTimes: Array.from(eliseScreenInputs).map(input => input.value)
-                });
-            }
-
-            // Charger les données depuis Firebase
-            function loadFromFirebase() {
-                database.ref('activities/timeo').once('value').then(snapshot => {
-                    const data = snapshot.val();
-                    if (data) {
-                        timeoCheckboxes.forEach((checkbox, index) => {
-                            checkbox.checked = data.checkboxes[index] || false;
-                        });
-                        timeoScreenInputs.forEach((input, index) => {
-                            input.value = data.screenTimes[index] || "";
-                        });
-                    }
-                });
-
-                database.ref('activities/elise').once('value').then(snapshot => {
-                    const data = snapshot.val();
-                    if (data) {
-                        eliseCheckboxes.forEach((checkbox, index) => {
-                            checkbox.checked = data.checkboxes[index] || false;
-                        });
-                        eliseScreenInputs.forEach((input, index) => {
-                            input.value = data.screenTimes[index] || "";
-                        });
-                    }
-                });
+                saveToLocalStorage(); // Sauvegarder les points après mise à jour
             }
 
             // Initialisation
-            loadFromFirebase();
+            loadFromLocalStorage();
             updatePoints();
 
-            // Événements pour mettre à jour les points et Firebase
             timeoCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updatePoints);
             });
