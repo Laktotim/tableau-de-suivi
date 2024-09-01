@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +30,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             border: 1px solid #ccc;
             text-align: left;
@@ -41,7 +43,8 @@
             text-transform: uppercase;
         }
 
-        input[type="checkbox"], input[type="number"] {
+        input[type="checkbox"],
+        input[type="number"] {
             margin-right: 10px;
         }
 
@@ -53,12 +56,14 @@
             border-radius: 4px;
         }
 
-        #timeo-total, #elise-total {
+        #timeo-total,
+        #elise-total {
             font-weight: bold;
             text-align: center;
         }
     </style>
 </head>
+
 <body>
 
     <h1>Tableau de Suivi</h1>
@@ -131,6 +136,27 @@
                 </td>
             </tr>
             <tr>
+                <td>8 heures de sommeil</td>
+                <td>
+                    Lundi: <input type="checkbox" class="timeo-sleep"><br>
+                    Mardi: <input type="checkbox" class="timeo-sleep"><br>
+                    Mercredi: <input type="checkbox" class="timeo-sleep"><br>
+                    Jeudi: <input type="checkbox" class="timeo-sleep"><br>
+                    Vendredi: <input type="checkbox" class="timeo-sleep"><br>
+                    Samedi: <input type="checkbox" class="timeo-sleep"><br>
+                    Dimanche: <input type="checkbox" class="timeo-sleep">
+                </td>
+                <td>
+                    Lundi: <input type="checkbox" class="elise-sleep"><br>
+                    Mardi: <input type="checkbox" class="elise-sleep"><br>
+                    Mercredi: <input type="checkbox" class="elise-sleep"><br>
+                    Jeudi: <input type="checkbox" class="elise-sleep"><br>
+                    Vendredi: <input type="checkbox" class="elise-sleep"><br>
+                    Samedi: <input type="checkbox" class="elise-sleep"><br>
+                    Dimanche: <input type="checkbox" class="elise-sleep">
+                </td>
+            </tr>
+            <tr>
                 <td>Rangement</td>
                 <td>
                     <input type="checkbox" class="timeo-checkbox"> Chambre rangée à la fin de la semaine
@@ -175,6 +201,8 @@
             const eliseCheckboxes = document.querySelectorAll(".elise-checkbox");
             const timeoScreenInputs = document.querySelectorAll(".timeo-screen");
             const eliseScreenInputs = document.querySelectorAll(".elise-screen");
+            const timeoSleepCheckboxes = document.querySelectorAll(".timeo-sleep");
+            const eliseSleepCheckboxes = document.querySelectorAll(".elise-sleep");
             const timeoTotal = document.getElementById("timeo-total");
             const eliseTotal = document.getElementById("elise-total");
 
@@ -197,6 +225,12 @@
                         });
                         eliseScreenInputs.forEach((input, index) => {
                             input.value = data[`elise-screen-${index}`] || "";
+                        });
+                        timeoSleepCheckboxes.forEach((checkbox, index) => {
+                            checkbox.checked = data[`timeo-sleep-${index}`] || false;
+                        });
+                        eliseSleepCheckboxes.forEach((checkbox, index) => {
+                            checkbox.checked = data[`elise-sleep-${index}`] || false;
                         });
                     } else {
                         console.log("No such document!");
@@ -225,7 +259,15 @@
                         ...Array.from(eliseScreenInputs).reduce((acc, input, index) => {
                             acc[`elise-screen-${index}`] = input.value;
                             return acc;
-                        }, {})
+                        }, {}),
+                        ...Array.from(timeoSleepCheckboxes).reduce((acc, checkbox, index) => {
+                            acc[`timeo-sleep-${index}`] = checkbox.checked;
+                            return acc;
+                        }, {}),
+                        ...Array.from(eliseSleepCheckboxes).reduce((acc, checkbox, index) => {
+                            acc[`elise-sleep-${index}`] = checkbox.checked;
+                            return acc;
+                        }, {}),
                     };
 
                     const docRef = doc(db, "activities", "summary");
@@ -278,6 +320,20 @@
                     }
                 });
 
+                // Points pour le sommeil de Timéo
+                timeoSleepCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        timeoPoints += 1;
+                    }
+                });
+
+                // Points pour le sommeil d'Elise
+                eliseSleepCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        elisePoints += 1;
+                    }
+                });
+
                 timeoTotal.textContent = timeoPoints;
                 eliseTotal.textContent = elisePoints;
                 saveToFirestore(); // Sauvegarder les points après mise à jour
@@ -302,7 +358,16 @@
             eliseScreenInputs.forEach(input => {
                 input.addEventListener("input", updatePoints);
             });
+
+            timeoSleepCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updatePoints);
+            });
+
+            eliseSleepCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updatePoints);
+            });
         });
     </script>
 </body>
+
 </html>
