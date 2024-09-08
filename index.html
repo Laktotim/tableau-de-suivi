@@ -61,20 +61,6 @@
             font-weight: bold;
             text-align: center;
         }
-
-        #reset-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #reset-btn:hover {
-            background-color: #d32f2f;
-        }
     </style>
 </head>
 
@@ -91,8 +77,6 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Ton tableau avec les cases à cocher et les champs de saisie -->
-            <!-- Reste inchangé -->
             <tr>
                 <td>Sport</td>
                 <td>
@@ -106,8 +90,81 @@
                     <input type="checkbox" class="elise-checkbox"> Séance 3
                 </td>
             </tr>
-            <!-- Continuer avec les autres catégories -->
-            <!-- ... -->
+            <tr>
+                <td>Révision</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="timeo-checkbox"> 2 heures<br>
+                    <input type="checkbox" class="timeo-checkbox"> 3 heures
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="elise-checkbox"> 2 heures<br>
+                    <input type="checkbox" class="elise-checkbox"> 3 heures
+                </td>
+            </tr>
+            <tr>
+                <td>Lecture</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="timeo-checkbox"> 2 heures
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> 1 heure<br>
+                    <input type="checkbox" class="elise-checkbox"> 2 heures
+                </td>
+            </tr>
+            <tr>
+                <td>Temps d'écran</td>
+                <td>
+                    Lundi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Mardi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Mercredi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Jeudi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Vendredi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Samedi: <input type="number" class="timeo-screen" min="0" max="24">h<br>
+                    Dimanche: <input type="number" class="timeo-screen" min="0" max="24">h
+                </td>
+                <td>
+                    Lundi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Mardi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Mercredi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Jeudi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Vendredi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Samedi: <input type="number" class="elise-screen" min="0" max="24">h<br>
+                    Dimanche: <input type="number" class="elise-screen" min="0" max="24">h
+                </td>
+            </tr>
+            <tr>
+                <td>8 heures de sommeil</td>
+                <td>
+                    Lundi: <input type="checkbox" class="timeo-sleep"><br>
+                    Mardi: <input type="checkbox" class="timeo-sleep"><br>
+                    Mercredi: <input type="checkbox" class="timeo-sleep"><br>
+                    Jeudi: <input type="checkbox" class="timeo-sleep"><br>
+                    Vendredi: <input type="checkbox" class="timeo-sleep"><br>
+                    Samedi: <input type="checkbox" class="timeo-sleep"><br>
+                    Dimanche: <input type="checkbox" class="timeo-sleep">
+                </td>
+                <td>
+                    Lundi: <input type="checkbox" class="elise-sleep"><br>
+                    Mardi: <input type="checkbox" class="elise-sleep"><br>
+                    Mercredi: <input type="checkbox" class="elise-sleep"><br>
+                    Jeudi: <input type="checkbox" class="elise-sleep"><br>
+                    Vendredi: <input type="checkbox" class="elise-sleep"><br>
+                    Samedi: <input type="checkbox" class="elise-sleep"><br>
+                    Dimanche: <input type="checkbox" class="elise-sleep">
+                </td>
+            </tr>
+            <tr>
+                <td>Rangement</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> Chambre rangée à la fin de la semaine
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> Chambre rangée à la fin de la semaine
+                </td>
+            </tr>
             <tr>
                 <td>Total des Points</td>
                 <td id="timeo-total">0</td>
@@ -116,14 +173,14 @@
         </tbody>
     </table>
 
-    <button id="reset-btn">Réinitialiser</button>
-
     <!-- Importer Firebase et Firestore -->
     <script type="module">
+        // Importer les fonctions nécessaires de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
+        // Configuration de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAyS0lH351j7E1KgrNfjbfzpXQKXQEdJK8",
             authDomain: "tableau-de-suivi.firebaseapp.com",
@@ -134,11 +191,12 @@
             measurementId: "G-GGDE32P9DY"
         };
 
+        // Initialiser Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+        const db = getFirestore(app); // Initialiser Firestore
 
-        document.addEventListener("DOMContentLoaded", async function () {
+        document.addEventListener("DOMContentLoaded", async function() {
             const timeoCheckboxes = document.querySelectorAll(".timeo-checkbox");
             const eliseCheckboxes = document.querySelectorAll(".elise-checkbox");
             const timeoScreenInputs = document.querySelectorAll(".timeo-screen");
@@ -147,7 +205,6 @@
             const eliseSleepCheckboxes = document.querySelectorAll(".elise-sleep");
             const timeoTotal = document.getElementById("timeo-total");
             const eliseTotal = document.getElementById("elise-total");
-            const resetBtn = document.getElementById("reset-btn");
 
             // Charger les données depuis Firestore
             async function loadFromFirestore() {
@@ -246,8 +303,8 @@
                         timeoPoints += 2;
                     } else if (hours === 2) {
                         timeoPoints += 1;
-                    } else if (hours === 0) {
-                        timeoPoints += 3;
+                    } else if (hours > 3) {
+                        timeoPoints -= (hours - 3);
                     }
                 });
 
@@ -258,82 +315,59 @@
                         elisePoints += 2;
                     } else if (hours === 2) {
                         elisePoints += 1;
-                    } else if (hours === 0) {
-                        elisePoints += 3;
+                    } else if (hours > 3) {
+                        elisePoints -= (hours - 3);
                     }
                 });
 
                 // Points pour le sommeil de Timéo
                 timeoSleepCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
-                        timeoPoints += 2;
+                        timeoPoints += 1;
                     }
                 });
 
                 // Points pour le sommeil d'Elise
                 eliseSleepCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
-                        elisePoints += 2;
+                        elisePoints += 1;
                     }
                 });
 
-                // Afficher les totaux
                 timeoTotal.textContent = timeoPoints;
                 eliseTotal.textContent = elisePoints;
+                saveToFirestore(); // Sauvegarder les points après mise à jour
             }
 
-            // Réinitialiser les cases à cocher et les champs
-            resetBtn.addEventListener("click", function () {
-                timeoCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                eliseCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                timeoScreenInputs.forEach(input => {
-                    input.value = "";
-                });
-                eliseScreenInputs.forEach(input => {
-                    input.value = "";
-                });
-                timeoSleepCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                eliseSleepCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
+            // Initialisation
+            await loadFromFirestore(); // Charger les données au démarrage
+            updatePoints();
 
-                timeoTotal.textContent = "0";
-                eliseTotal.textContent = "0";
-
-                saveToFirestore();
-            });
-
-            // Charger les données lors du chargement de la page
-            await loadFromFirestore();
-
-            // Mettre à jour les points lorsque les cases sont modifiées
             timeoCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updatePoints);
             });
+
             eliseCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updatePoints);
             });
+
             timeoScreenInputs.forEach(input => {
                 input.addEventListener("input", updatePoints);
             });
+
             eliseScreenInputs.forEach(input => {
                 input.addEventListener("input", updatePoints);
             });
+
             timeoSleepCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updatePoints);
             });
+
             eliseSleepCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updatePoints);
             });
         });
     </script>
-
 </body>
 
 </html>
