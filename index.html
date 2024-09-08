@@ -62,18 +62,18 @@
             text-align: center;
         }
 
-        button {
+        #reset-btn {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #ff4d4d;
+            background-color: #f44336;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #ff3333;
+        #reset-btn:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
@@ -91,7 +91,23 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Reste du tableau inchangé -->
+            <!-- Ton tableau avec les cases à cocher et les champs de saisie -->
+            <!-- Reste inchangé -->
+            <tr>
+                <td>Sport</td>
+                <td>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 1<br>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 2<br>
+                    <input type="checkbox" class="timeo-checkbox"> Séance 3
+                </td>
+                <td>
+                    <input type="checkbox" class="elise-checkbox"> Séance 1<br>
+                    <input type="checkbox" class="elise-checkbox"> Séance 2<br>
+                    <input type="checkbox" class="elise-checkbox"> Séance 3
+                </td>
+            </tr>
+            <!-- Continuer avec les autres catégories -->
+            <!-- ... -->
             <tr>
                 <td>Total des Points</td>
                 <td id="timeo-total">0</td>
@@ -100,17 +116,14 @@
         </tbody>
     </table>
 
-    <!-- Bouton de réinitialisation -->
     <button id="reset-btn">Réinitialiser</button>
 
     <!-- Importer Firebase et Firestore -->
     <script type="module">
-        // Importer les fonctions nécessaires de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-        import { getFirestore, collection, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-        // Configuration de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAyS0lH351j7E1KgrNfjbfzpXQKXQEdJK8",
             authDomain: "tableau-de-suivi.firebaseapp.com",
@@ -121,12 +134,11 @@
             measurementId: "G-GGDE32P9DY"
         };
 
-        // Initialiser Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-        const db = getFirestore(app); // Initialiser Firestore
+        const db = getFirestore(app);
 
-        document.addEventListener("DOMContentLoaded", async function() {
+        document.addEventListener("DOMContentLoaded", async function () {
             const timeoCheckboxes = document.querySelectorAll(".timeo-checkbox");
             const eliseCheckboxes = document.querySelectorAll(".elise-checkbox");
             const timeoScreenInputs = document.querySelectorAll(".timeo-screen");
@@ -213,117 +225,115 @@
                 let timeoPoints = 0;
                 let elisePoints = 0;
 
+                // Points pour les cases à cocher de Timéo
                 timeoCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         timeoPoints += 1;
                     }
                 });
 
+                // Points pour les cases à cocher d'Elise
                 eliseCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         elisePoints += 1;
                     }
                 });
 
+                // Points pour le temps d'écran de Timéo
                 timeoScreenInputs.forEach(input => {
                     const hours = parseInt(input.value, 10) || 0;
                     if (hours === 1) {
                         timeoPoints += 2;
                     } else if (hours === 2) {
                         timeoPoints += 1;
-                    } else if (hours > 3) {
-                        timeoPoints -= (hours - 3);
+                    } else if (hours === 0) {
+                        timeoPoints += 3;
                     }
                 });
 
+                // Points pour le temps d'écran d'Elise
                 eliseScreenInputs.forEach(input => {
                     const hours = parseInt(input.value, 10) || 0;
                     if (hours === 1) {
                         elisePoints += 2;
                     } else if (hours === 2) {
                         elisePoints += 1;
-                    } else if (hours > 3) {
-                        elisePoints -= (hours - 3);
+                    } else if (hours === 0) {
+                        elisePoints += 3;
                     }
                 });
 
+                // Points pour le sommeil de Timéo
                 timeoSleepCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
-                        timeoPoints += 1;
+                        timeoPoints += 2;
                     }
                 });
 
+                // Points pour le sommeil d'Elise
                 eliseSleepCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
-                        elisePoints += 1;
+                        elisePoints += 2;
                     }
                 });
 
+                // Afficher les totaux
                 timeoTotal.textContent = timeoPoints;
                 eliseTotal.textContent = elisePoints;
             }
 
-            // Réinitialiser toutes les cases et champs de saisie
-            resetBtn.addEventListener("click", () => {
-                timeoCheckboxes.forEach(checkbox => checkbox.checked = false);
-                eliseCheckboxes.forEach(checkbox => checkbox.checked = false);
-                timeoScreenInputs.forEach(input => input.value = "");
-                eliseScreenInputs.forEach(input => input.value = "");
-                timeoSleepCheckboxes.forEach(checkbox => checkbox.checked = false);
-                eliseSleepCheckboxes.forEach(checkbox => checkbox.checked = false);
+            // Réinitialiser les cases à cocher et les champs
+            resetBtn.addEventListener("click", function () {
+                timeoCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                eliseCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                timeoScreenInputs.forEach(input => {
+                    input.value = "";
+                });
+                eliseScreenInputs.forEach(input => {
+                    input.value = "";
+                });
+                timeoSleepCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                eliseSleepCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
 
-                updatePoints(); // Mettre à jour les points après réinitialisation
-                saveToFirestore(); // Sauvegarder l'état réinitialisé dans Firestore
+                timeoTotal.textContent = "0";
+                eliseTotal.textContent = "0";
+
+                saveToFirestore();
             });
 
-            // Détecter les changements et mettre à jour les points
+            // Charger les données lors du chargement de la page
+            await loadFromFirestore();
+
+            // Mettre à jour les points lorsque les cases sont modifiées
             timeoCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                checkbox.addEventListener("change", updatePoints);
             });
-
             eliseCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                checkbox.addEventListener("change", updatePoints);
             });
-
             timeoScreenInputs.forEach(input => {
-                input.addEventListener("input", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                input.addEventListener("input", updatePoints);
             });
-
             eliseScreenInputs.forEach(input => {
-                input.addEventListener("input", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                input.addEventListener("input", updatePoints);
             });
-
             timeoSleepCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                checkbox.addEventListener("change", updatePoints);
             });
-
             eliseSleepCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", () => {
-                    updatePoints();
-                    saveToFirestore();
-                });
+                checkbox.addEventListener("change", updatePoints);
             });
-
-            // Charger les données initiales depuis Firestore
-            loadFromFirestore();
-            updatePoints();
         });
     </script>
+
 </body>
 
 </html>
